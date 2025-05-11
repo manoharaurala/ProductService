@@ -1,0 +1,97 @@
+package org.ruby.productservice.services;
+
+import org.ruby.productservice.dtos.FakeStoreProductDto;
+import org.ruby.productservice.models.Category;
+import org.ruby.productservice.models.Product;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.List;
+import java.util.Map;
+
+//Note: This service class will implement all the API's using FakeStore.
+@Service
+public class FakeStoreProductService implements ProductService {
+    private final RestTemplate restTemplate;
+    private final String FAKE_STORE_API_URL = "https://fakestoreapi.com/products";
+
+    public FakeStoreProductService(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
+    }
+
+    @Override
+    public Product getSingleProduct(Long productId) {
+        ResponseEntity<FakeStoreProductDto> fakeStoreProductDtoResponseEntity =
+                restTemplate.getForEntity(
+                        FAKE_STORE_API_URL + "/" + productId,
+                        FakeStoreProductDto.class
+                );
+        FakeStoreProductDto fakeStoreProductDto = fakeStoreProductDtoResponseEntity.getBody();
+        return convertFakeStoreProductDtoToProduct(fakeStoreProductDto);
+    }
+
+
+    @Override
+    public List<Product> getAllProducts() {
+        ResponseEntity<List<Map<String, Object>>> responseEntity = restTemplate.exchange(
+                FAKE_STORE_API_URL,
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<List<Map<String, Object>>>() {
+                }
+        );
+        List<Map<String, Object>> fakeStoreProductDtos = responseEntity.getBody();
+        return fakeStoreProductDtos.stream()
+                .map(this::convertFakeStoreProductMapToProduct)
+                .toList();
+    }
+
+
+    @Override
+    public Product createProduct(Product product) {
+        return null;
+    }
+
+    @Override
+    public boolean deleteProduct(Long productId) {
+        return false;
+    }
+
+    private Product convertFakeStoreProductDtoToProduct(FakeStoreProductDto fakeStoreProductDto) {
+        if (fakeStoreProductDto == null) {
+            return null;
+        }
+        Product product = new Product();
+        product.setId(fakeStoreProductDto.getId());
+        product.setTitle(fakeStoreProductDto.getTitle());
+        product.setDescription(fakeStoreProductDto.getDescription());
+        product.setPrice(fakeStoreProductDto.getPrice());
+        product.setImageUrl(fakeStoreProductDto.getImage());
+        Category category = new Category();
+        category.setTitle(fakeStoreProductDto.getCategory());
+        product.setCategory(category);
+        return product;
+    }
+
+    private Product convertFakeStoreProductMapToProduct(Map fakeStoreProductMap) {
+        if (fakeStoreProductMap == null) {
+            return null;
+        }
+        Product product = new Product();
+        product.setId(((Number) fakeStoreProductMap.get("id")).longValue());
+        product.setTitle((String) fakeStoreProductMap.get("title"));
+        product.setDescription((String) fakeStoreProductMap.get("description"));
+        product.setPrice(((Number) fakeStoreProductMap.get("price")).doubleValue());
+        product.setImageUrl((String) fakeStoreProductMap.get("image"));
+        Category category = new Category();
+        category.setTitle((String) fakeStoreProductMap.get("category"));
+        product.setCategory(category);
+        return product;
+
+    }
+
+
+}
