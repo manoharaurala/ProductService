@@ -3,12 +3,11 @@ package org.ruby.productservice.services;
 import org.ruby.productservice.dtos.FakeStoreProductDto;
 import org.ruby.productservice.models.Category;
 import org.ruby.productservice.models.Product;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -36,7 +35,7 @@ public class FakeStoreProductService implements ProductService {
 
     @Override
     public List<Product> getAllProducts() {
-        ResponseEntity<List<Map<String, Object>>> responseEntity = restTemplate.exchange(
+        /*ResponseEntity<List<Map<String, Object>>> responseEntity = restTemplate.exchange(
                 FAKE_STORE_API_URL,
                 HttpMethod.GET,
                 null,
@@ -46,7 +45,17 @@ public class FakeStoreProductService implements ProductService {
         List<Map<String, Object>> fakeStoreProductDtos = responseEntity.getBody();
         return fakeStoreProductDtos.stream()
                 .map(this::convertFakeStoreProductMapToProduct)
-                .toList();
+                .toList();*/
+        ResponseEntity<FakeStoreProductDto[]> responseEntity = restTemplate.getForEntity(
+                FAKE_STORE_API_URL,
+                FakeStoreProductDto[].class
+        );
+        List<Product> products = new ArrayList<>();
+        FakeStoreProductDto[] fakeStoreProductDtos = responseEntity.getBody();
+        for (FakeStoreProductDto fakeStoreProductDto : fakeStoreProductDtos) {
+            products.add(convertFakeStoreProductDtoToProduct(fakeStoreProductDto));
+        }
+        return products;
     }
 
 
@@ -76,7 +85,7 @@ public class FakeStoreProductService implements ProductService {
         return product;
     }
 
-    private Product convertFakeStoreProductMapToProduct(Map fakeStoreProductMap) {
+   /* private Product convertFakeStoreProductMapToProduct(Map fakeStoreProductMap) {
         if (fakeStoreProductMap == null) {
             return null;
         }
@@ -91,7 +100,7 @@ public class FakeStoreProductService implements ProductService {
         product.setCategory(category);
         return product;
 
-    }
+    }*/
 
 
 }
