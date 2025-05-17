@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 //Note: This service class will implement all the API's using FakeStore.
-@Service
+@Service(value = "fakeStoreProductService")
 public class FakeStoreProductService implements ProductService {
     private final RestTemplate restTemplate;
     private final String FAKE_STORE_API_URL = "https://fakestoreapi.com/products";
