@@ -12,11 +12,12 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class ProductServiceExceptionHandler {
 
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<ExceptionDto> handleRuntimeException() {
+    public ResponseEntity<ExceptionDto> handleRuntimeException(RuntimeException exception) {
         // Handle the exception
         ExceptionDto exceptionDto = new ExceptionDto();
         exceptionDto.setMessage("Something went wrong!");
         exceptionDto.setResolutionDetails("You need to pay more money to get it resolved from us. Thanks!");
+        exception.printStackTrace();
         return new ResponseEntity<>(
                 exceptionDto,
                 HttpStatus.NOT_FOUND
@@ -29,7 +30,7 @@ public class ProductServiceExceptionHandler {
         // Handle the exception
         ProductNotFoundExceptionDto productNotFoundExceptionDto = new ProductNotFoundExceptionDto();
         productNotFoundExceptionDto.setProductId(exception.getProductId());
-        productNotFoundExceptionDto.setMessage("Product not found!");
+        productNotFoundExceptionDto.setMessage(exception.getMessage());
         productNotFoundExceptionDto.setResolutionDetails("Please try again with a valid product id");
         return new ResponseEntity<>(
                 productNotFoundExceptionDto,

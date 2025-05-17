@@ -8,6 +8,7 @@ import lombok.Setter;
 @Setter
 @Entity(name = "categories")
 public class Category extends BaseModel {
+    //@Column(unique = true, nullable = false)
     private String title;
 
 }

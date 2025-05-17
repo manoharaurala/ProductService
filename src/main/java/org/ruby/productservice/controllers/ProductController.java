@@ -1,5 +1,6 @@
 package org.ruby.productservice.controllers;
 
+import org.ruby.productservice.exceptions.CategoryNotFoundException;
 import org.ruby.productservice.models.Product;
 import org.ruby.productservice.services.ProductService;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -15,7 +16,7 @@ public class ProductController {
     private final ProductService productService;
 
     // Constructor based dependency injection
-    public ProductController(@Qualifier("fakeStoreProductService") ProductService productService) {
+    public ProductController(@Qualifier("selfProductService") ProductService productService) {
         this.productService = productService;
     }
 
@@ -31,14 +32,14 @@ public class ProductController {
 
     }
 
-    @GetMapping("/")
+    @GetMapping()
     public List<Product> getAllProducts() {
         return productService.getAllProducts();
     }
 
     @PostMapping()
-    public Product createProduct(@RequestBody Product product) {
-        return new Product();
+    public Product createProduct(@RequestBody Product product) throws CategoryNotFoundException {
+        return productService.createProduct(product);
     }
 
     @DeleteMapping({"{id}"})

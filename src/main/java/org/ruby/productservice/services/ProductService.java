@@ -1,5 +1,6 @@
 package org.ruby.productservice.services;
 
+import org.ruby.productservice.exceptions.CategoryNotFoundException;
 import org.ruby.productservice.exceptions.ProductNotFoundException;
 import org.ruby.productservice.models.Product;
 
@@ -11,7 +12,7 @@ public interface ProductService {
 
     List<Product> getAllProducts();
 
-    Product createProduct(Product product);
+    Product createProduct(Product product) throws CategoryNotFoundException;
 
     boolean deleteProduct(Long productId);
 
