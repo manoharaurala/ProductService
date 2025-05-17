@@ -1,9 +1,35 @@
 package org.ruby.productservice.repositories;
 
+import org.ruby.productservice.models.Category;
 import org.ruby.productservice.models.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+import java.util.Optional;
+
 @Repository
-public interface ProductRepository extends JpaRepository<Product,Long> {
+public interface ProductRepository extends JpaRepository<Product, Long> {
+
+    @Override
+    Optional<Product> findById(Long productId);
+
+    List<Product> findByIdAndTitle(Long productId, String title);
+
+    Optional<Product> findByTitle(String title);
+
+    List<Product> findByTitleContainsIgnoreCase(String title);
+
+    List<Product> findByPriceBetween(Double minPrice, Double maxPrice);
+
+    List<Product> findByCategory(Category category);
+
+    List<Product> findAllByCategory_Id(Long categoryId);
+
+    //Join query
+    List<Product> findAllByCategory_Title(String categoryTitle);
+
+    //    @Query("select title from products where id = ?")
+    //    Optional<Product> findProductTitleById(Long productId);
+
 }
