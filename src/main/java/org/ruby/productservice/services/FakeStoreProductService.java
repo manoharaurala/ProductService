@@ -1,6 +1,7 @@
 package org.ruby.productservice.services;
 
 import org.ruby.productservice.dtos.FakeStoreProductDto;
+import org.ruby.productservice.exceptions.ProductNotFoundException;
 import org.ruby.productservice.models.Category;
 import org.ruby.productservice.models.Product;
 import org.springframework.http.ResponseEntity;
@@ -9,7 +10,6 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 //Note: This service class will implement all the API's using FakeStore.
 @Service
@@ -22,13 +22,17 @@ public class FakeStoreProductService implements ProductService {
     }
 
     @Override
-    public Product getSingleProduct(Long productId) {
+    public Product getSingleProduct(Long productId) throws ProductNotFoundException {
         ResponseEntity<FakeStoreProductDto> fakeStoreProductDtoResponseEntity =
                 restTemplate.getForEntity(
                         FAKE_STORE_API_URL + "/" + productId,
                         FakeStoreProductDto.class
                 );
         FakeStoreProductDto fakeStoreProductDto = fakeStoreProductDtoResponseEntity.getBody();
+        if (fakeStoreProductDto == null) {
+            // If the product is not found, throw a custom exception
+            throw new ProductNotFoundException(productId, "Product with id " + productId + " doesn't exist.");
+        }
         return convertFakeStoreProductDtoToProduct(fakeStoreProductDto);
     }
 

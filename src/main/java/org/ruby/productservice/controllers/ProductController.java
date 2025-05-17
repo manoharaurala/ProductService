@@ -2,6 +2,7 @@ package org.ruby.productservice.controllers;
 
 import org.ruby.productservice.models.Product;
 import org.ruby.productservice.services.ProductService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,8 +19,15 @@ public class ProductController {
     }
 
     @GetMapping("{id}")
-    public Product getSingleProduct(@PathVariable("id") Long productId) {
-        return productService.getSingleProduct(productId);
+    public ResponseEntity<Product> getSingleProduct(@PathVariable("id") Long productId) {
+
+        return
+                new ResponseEntity<>(
+                        productService.getSingleProduct(productId),
+                        HttpStatus.OK
+                );
+
+
     }
 
     @GetMapping("/")
