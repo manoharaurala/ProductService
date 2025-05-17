@@ -61,6 +61,12 @@ public class SelfProductService implements ProductService {
 
     @Override
     public boolean deleteProduct(Long productId) {
-        return false;
+        Product product = productRepository.findById(productId).orElse(null);
+        if (product != null) {
+            productRepository.delete(product);
+            return true;
+        } else {
+            return false;
+        }
     }
 }
