@@ -3,6 +3,8 @@ package org.ruby.productservice.repositories;
 import org.ruby.productservice.models.Category;
 import org.ruby.productservice.models.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -37,4 +39,12 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     List<Product> findAllByOrderByPriceDesc();
 
+    //    @Query("select p from products p where p.category.id = ?1")
+    @Query("select p from Product p where p.id = ?1")
+    Optional<Product> findProductWithGivenIdHQL(Long productId);
+
+    @Query(value = "select * from products p where p.id= :id", nativeQuery = true)
+    Optional<Product> findProductWithGivenIdSQL(@Param("id") Long productId);
+
 }
+
