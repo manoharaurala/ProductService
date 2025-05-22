@@ -31,7 +31,7 @@ class ProductServiceApplicationTest {
         product.setPrice(100.0);
         product.setDescription("Test Description");
         product.setCategory(category); // Set category to null or a valid Category object
-        product.setImageUrl("http://example.com/image.jpg");
+        product.setImgUrl("http://example.com/image.jpg");
         productRepository.save(product);
     }
 
@@ -51,7 +51,7 @@ class ProductServiceApplicationTest {
                     assertEquals("Test Product", product.getTitle());
                     assertEquals(100.0, product.getPrice());
                     assertEquals("Test Description", product.getDescription());
-                    assertEquals("http://example.com/image.jpg", product.getImageUrl());
+                    assertEquals("http://example.com/image.jpg", product.getImgUrl());
                 });
     }
 
@@ -64,7 +64,7 @@ class ProductServiceApplicationTest {
                     assertEquals("Test Product", product.getTitle());
                     assertEquals(100.0, product.getPrice());
                     assertEquals("Test Description", product.getDescription());
-                    assertEquals("http://example.com/image.jpg", product.getImageUrl());
+                    assertEquals("http://example.com/image.jpg", product.getImgUrl());
                 });
     }
 
