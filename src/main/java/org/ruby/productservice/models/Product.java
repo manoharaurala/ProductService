@@ -1,5 +1,6 @@
 package org.ruby.productservice.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,7 +15,9 @@ public class Product extends BaseModel {
     private String description;
     private Double price;
     private String imgUrl;
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.PERSIST})
+    @JoinColumn
+    @JsonBackReference
     private Category category;
 
 }
