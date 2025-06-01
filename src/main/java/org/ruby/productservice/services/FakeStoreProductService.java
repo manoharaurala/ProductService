@@ -4,6 +4,7 @@ import org.ruby.productservice.dtos.FakeStoreProductDto;
 import org.ruby.productservice.exceptions.ProductNotFoundException;
 import org.ruby.productservice.models.Category;
 import org.ruby.productservice.models.Product;
+import org.springframework.context.annotation.Primary;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -11,6 +12,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.ArrayList;
 import java.util.List;
 
+@Primary
 //Note: This service class will implement all the API's using FakeStore.
 @Service(value = "fakeStoreProductService")
 public class FakeStoreProductService implements ProductService {

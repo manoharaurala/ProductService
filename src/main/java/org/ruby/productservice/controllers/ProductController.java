@@ -3,7 +3,6 @@ package org.ruby.productservice.controllers;
 import org.ruby.productservice.exceptions.CategoryNotFoundException;
 import org.ruby.productservice.models.Product;
 import org.ruby.productservice.services.ProductService;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,20 +15,13 @@ public class ProductController {
     private final ProductService productService;
 
     // Constructor based dependency injection
-    public ProductController(@Qualifier("selfProductService") ProductService productService) {
+    public ProductController(ProductService productService) {
         this.productService = productService;
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Product> getSingleProduct(@PathVariable("id") Long productId) {
-
-        return
-                new ResponseEntity<>(
-                        productService.getSingleProduct(productId),
-                        HttpStatus.OK
-                );
-
-
+    public Product getSingleProduct(@PathVariable("id") Long productId) {
+        return productService.getSingleProduct(productId);
     }
 
     @GetMapping()
