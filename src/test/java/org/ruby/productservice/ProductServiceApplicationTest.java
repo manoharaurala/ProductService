@@ -17,7 +17,6 @@ class ProductServiceApplicationTest {
     private ProductRepository productRepository;
 
 
-
     @BeforeEach
     public void setUp() {
         // This method will run before each test
@@ -67,7 +66,6 @@ class ProductServiceApplicationTest {
                     assertEquals("http://example.com/image.jpg", product.getImgUrl());
                 });
     }
-
 
 
 }

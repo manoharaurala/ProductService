@@ -6,12 +6,12 @@ import org.ruby.productservice.models.Product;
 import org.ruby.productservice.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -40,8 +40,8 @@ class ProductControllerTest {
         //Asserting the result
         Product actualProduct = productController.getSingleProduct(productId);
         assertEquals(expectedProduct, actualProduct);
-        assertEquals(productId,actualProduct.getId());
-        assertEquals("Iphone 17 Plus",actualProduct.getTitle());
+        assertEquals(productId, actualProduct.getId());
+        assertEquals("Iphone 17 Plus", actualProduct.getTitle());
         assertEquals(65000.00, actualProduct.getPrice());
 
     }
@@ -52,7 +52,7 @@ class ProductControllerTest {
     void testGetSingleProductNegativeCase() {
         // Arrange
         Long productId = 999L; // Assuming this product does not exist
-        when(productService.getSingleProduct(productId)).thenThrow(new ProductNotFoundException(productId,"Product not found"));
+        when(productService.getSingleProduct(productId)).thenThrow(new ProductNotFoundException(productId, "Product not found"));
 
         // Act & Assert
         try {
@@ -63,6 +63,21 @@ class ProductControllerTest {
         }
 
     }
+
+    @Test
+    public void testGetSingleProductThrowsProductNotFoundException() throws ProductNotFoundException {
+        // Arrange
+        ProductNotFoundException productNotFoundException = new ProductNotFoundException(-1L, "Please pass the correct productId");
+        //Act
+        when(productService.getSingleProduct(-1L))
+                .thenThrow(productNotFoundException);
+
+        Exception exception = assertThrows(ProductNotFoundException.class,
+                () -> productController.getSingleProduct(-1L));
+
+        assertEquals(productNotFoundException.getMessage(), exception.getMessage());
+    }
+
 
     //TODO: Implement test case for getAllProducts
     @Test
