@@ -1,6 +1,8 @@
 package org.ruby.productservice.controllers;
 
+import org.ruby.productservice.commons.AuthCommonUtil;
 import org.ruby.productservice.exceptions.CategoryNotFoundException;
+import org.ruby.productservice.exceptions.UnAuthorisedException;
 import org.ruby.productservice.models.Product;
 import org.ruby.productservice.services.ProductService;
 import org.springframework.http.HttpStatus;
@@ -13,14 +15,20 @@ import java.util.List;
 @RequestMapping("/products")
 public class ProductController {
     private final ProductService productService;
+    private final AuthCommonUtil authCommonUtil;
 
     // Constructor based dependency injection
-    public ProductController(ProductService productService) {
+    public ProductController(ProductService productService, AuthCommonUtil authCommonUtil) {
         this.productService = productService;
+        this.authCommonUtil = authCommonUtil;
     }
 
     @GetMapping("{id}")
-    public Product getSingleProduct(@PathVariable("id") Long productId) {
+    public Product getSingleProduct(@PathVariable("id") Long productId,@RequestHeader("Authorization") String token) {
+        UserDto userDto = authCommonUtil.validateToken(token);
+        if (userDto == null) {
+            throw new UnAuthorisedException("Invalid token provided");
+        }
         return productService.getSingleProduct(productId);
     }
 
