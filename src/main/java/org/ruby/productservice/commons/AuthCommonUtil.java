@@ -17,11 +17,11 @@ public class AuthCommonUtil {
 
 
     public UserDto validateToken(String tokenValue) {
-       HttpHeaders httpHeaders = new HttpHeaders();
+        HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.set("Authorization", tokenValue);
         HttpEntity<String> httpEntity = new HttpEntity<>(httpHeaders);
 
-        return restTemplate. exchange(
+        return restTemplate.exchange(
                 "http://127.0.0.1:8080/auth/validate/",
                 HttpMethod.GET,
                 httpEntity,

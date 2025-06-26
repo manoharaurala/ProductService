@@ -5,6 +5,7 @@ import org.ruby.productservice.exceptions.ProductNotFoundException;
 import org.ruby.productservice.models.Category;
 import org.ruby.productservice.models.Product;
 import org.springframework.context.annotation.Primary;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -15,16 +16,27 @@ import java.util.List;
 
 //Note: This service class will implement all the API's using FakeStore.
 @Service(value = "fakeStoreProductService")
+@Primary
 public class FakeStoreProductService implements ProductService {
     private final RestTemplate restTemplate;
     private final String FAKE_STORE_API_URL = "https://fakestoreapi.com/products";
+    private final RedisTemplate<String, Object> redisTemplate;
 
-    public FakeStoreProductService(RestTemplate restTemplate) {
+    public FakeStoreProductService(RestTemplate restTemplate, RedisTemplate<String, Object> redisTemplate) {
         this.restTemplate = restTemplate;
+        this.redisTemplate = redisTemplate;
     }
 
     @Override
     public Product getSingleProduct(Long productId) throws ProductNotFoundException {
+        //First check if the product with the given id exists in the Redis cache.
+        //If it exists, return the product from the cache.
+        Product product = (Product) redisTemplate.opsForHash().get("products", "product_" + productId.toString());
+        if (product != null) {
+            return product;
+        }
+
+        //If it doesn't exist, call the FakeStore API to get the product details.
         ResponseEntity<FakeStoreProductDto> fakeStoreProductDtoResponseEntity =
                 restTemplate.getForEntity(
                         FAKE_STORE_API_URL + "/" + productId,
@@ -35,7 +47,10 @@ public class FakeStoreProductService implements ProductService {
             // If the product is not found, throw a custom exception
             throw new ProductNotFoundException(productId, "Product with id " + productId + " doesn't exist.");
         }
-        return convertFakeStoreProductDtoToProduct(fakeStoreProductDto);
+        //Before returning the product, save it in the Redis cache.
+        product = convertFakeStoreProductDtoToProduct(fakeStoreProductDto);
+        redisTemplate.opsForHash().put("products", "product_" + productId, product);
+        return product;
     }
 
 
@@ -52,15 +67,29 @@ public class FakeStoreProductService implements ProductService {
         return fakeStoreProductDtos.stream()
                 .map(this::convertFakeStoreProductMapToProduct)
                 .toList();*/
+        //Check if the products are already cached in Redis.
+//        List<Object> cachedProducts = (List<Object>)redisTemplate.opsForHash().values("products");
+//        if (cachedProducts != null && !cachedProducts.isEmpty()) {
+//            // If products are cached, return them
+//            return cachedProducts.stream()
+//                    .map(product -> (Product) product)
+//                    .toList();
+//        }
+
         ResponseEntity<FakeStoreProductDto[]> responseEntity = restTemplate.getForEntity(
                 FAKE_STORE_API_URL,
                 FakeStoreProductDto[].class
         );
+
         List<Product> products = new ArrayList<>();
         FakeStoreProductDto[] fakeStoreProductDtos = responseEntity.getBody();
         for (FakeStoreProductDto fakeStoreProductDto : fakeStoreProductDtos) {
             products.add(convertFakeStoreProductDtoToProduct(fakeStoreProductDto));
         }
+        // Save the products in Redis cache
+//        for (Product product : products) {
+//            redisTemplate.opsForHash().put("products", "product_" + product.getId().toString(), product);
+//        }
         return products;
     }
 

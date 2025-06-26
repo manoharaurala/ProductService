@@ -2,7 +2,6 @@ package org.ruby.productservice.controllers;
 
 import org.ruby.productservice.commons.AuthCommonUtil;
 import org.ruby.productservice.exceptions.CategoryNotFoundException;
-import org.ruby.productservice.exceptions.UnAuthorisedException;
 import org.ruby.productservice.models.Product;
 import org.ruby.productservice.services.ProductService;
 import org.springframework.http.HttpStatus;
@@ -24,7 +23,7 @@ public class ProductController {
     }
 
     @GetMapping("{id}")
-    public Product getSingleProduct(@PathVariable("id") Long productId,@RequestHeader("Authorization") String token) {
+    public Product getSingleProduct(@PathVariable("id") Long productId, @RequestHeader("Authorization") String token) {
 //        UserDto userDto = authCommonUtil.validateToken(token);
 //        if (userDto == null) {
 //            throw new UnAuthorisedException("Invalid token provided");
