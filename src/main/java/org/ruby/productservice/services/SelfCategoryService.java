@@ -2,11 +2,13 @@ package org.ruby.productservice.services;
 
 import org.ruby.productservice.models.Category;
 import org.ruby.productservice.repositories.CategoryRepository;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
+@Primary
 public class SelfCategoryService implements CategoryService {
     private final CategoryRepository categoryRepository;
 

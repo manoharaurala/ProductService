@@ -4,6 +4,7 @@ import org.ruby.productservice.commons.AuthCommonUtil;
 import org.ruby.productservice.exceptions.CategoryNotFoundException;
 import org.ruby.productservice.models.Product;
 import org.ruby.productservice.services.ProductService;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,6 +37,15 @@ public class ProductController {
 
         return productService.getAllProducts();
     }
+
+    @GetMapping("/title/{title}/{pageNumber}/{pageSize}")
+    public Page<Product> getProductByTitle(
+            @PathVariable("pageNumber") int pageNumber,
+            @PathVariable("pageSize") int pageSize,
+            @PathVariable("title") String title) {
+        return productService.getProductByTitle(title, pageNumber, pageSize);
+    }
+
 
     @PostMapping()
     public Product createProduct(@RequestBody Product product) throws CategoryNotFoundException {

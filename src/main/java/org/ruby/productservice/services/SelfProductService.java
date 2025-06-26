@@ -6,13 +6,17 @@ import org.ruby.productservice.models.Category;
 import org.ruby.productservice.models.Product;
 import org.ruby.productservice.repositories.CategoryRepository;
 import org.ruby.productservice.repositories.ProductRepository;
+import org.springframework.context.annotation.Primary;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service(value = "selfProductService")
-//@Primary
+@Primary
 public class SelfProductService implements ProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
@@ -68,5 +72,12 @@ public class SelfProductService implements ProductService {
         } else {
             return false;
         }
+    }
+
+    @Override
+    public Page<Product> getProductByTitle(String title, int pageNumber, int pageSize) {
+        Sort sort = Sort.by(Sort.Direction.ASC, "price", "title");
+        return productRepository.findByTitleContainsIgnoreCase(title, PageRequest.of(pageNumber, pageSize, sort));
+
     }
 }

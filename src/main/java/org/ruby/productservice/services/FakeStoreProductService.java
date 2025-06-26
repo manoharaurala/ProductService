@@ -4,7 +4,7 @@ import org.ruby.productservice.dtos.FakeStoreProductDto;
 import org.ruby.productservice.exceptions.ProductNotFoundException;
 import org.ruby.productservice.models.Category;
 import org.ruby.productservice.models.Product;
-import org.springframework.context.annotation.Primary;
+import org.springframework.data.domain.Page;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -16,7 +16,7 @@ import java.util.List;
 
 //Note: This service class will implement all the API's using FakeStore.
 @Service(value = "fakeStoreProductService")
-@Primary
+//@Primary
 public class FakeStoreProductService implements ProductService {
     private final RestTemplate restTemplate;
     private final String FAKE_STORE_API_URL = "https://fakestoreapi.com/products";
@@ -102,6 +102,11 @@ public class FakeStoreProductService implements ProductService {
     @Override
     public boolean deleteProduct(Long productId) {
         return false;
+    }
+
+    @Override
+    public Page<Product> getProductByTitle(String title, int pageNumber, int pageSize) {
+        return Page.empty();
     }
 
     private Product convertFakeStoreProductDtoToProduct(FakeStoreProductDto fakeStoreProductDto) {
