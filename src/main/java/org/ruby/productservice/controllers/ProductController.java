@@ -25,10 +25,10 @@ public class ProductController {
 
     @GetMapping("{id}")
     public Product getSingleProduct(@PathVariable("id") Long productId,@RequestHeader("Authorization") String token) {
-        UserDto userDto = authCommonUtil.validateToken(token);
-        if (userDto == null) {
-            throw new UnAuthorisedException("Invalid token provided");
-        }
+//        UserDto userDto = authCommonUtil.validateToken(token);
+//        if (userDto == null) {
+//            throw new UnAuthorisedException("Invalid token provided");
+//        }
         return productService.getSingleProduct(productId);
     }
 

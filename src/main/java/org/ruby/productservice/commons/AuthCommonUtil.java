@@ -17,7 +17,7 @@ public class AuthCommonUtil {
 
 
     public UserDto validateToken(String tokenValue) {
-        HttpHeaders httpHeaders = new HttpHeaders();
+       HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.set("Authorization", tokenValue);
         HttpEntity<String> httpEntity = new HttpEntity<>(httpHeaders);
 

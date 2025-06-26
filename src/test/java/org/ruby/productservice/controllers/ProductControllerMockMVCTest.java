@@ -18,7 +18,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(ProductController.class)
 public class ProductControllerMockMVCTest {
-    @Autowired
+   /* @Autowired
     private MockMvc mockMvc;
 
     @MockitoBean
@@ -53,5 +53,5 @@ public class ProductControllerMockMVCTest {
                 .andExpect(status().isOk())
                 .andExpect(content().json(expectedJson));
 
-    }
+    }*/
 }

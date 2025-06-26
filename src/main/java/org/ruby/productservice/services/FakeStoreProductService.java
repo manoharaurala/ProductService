@@ -12,7 +12,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.ArrayList;
 import java.util.List;
 
-@Primary
+
 //Note: This service class will implement all the API's using FakeStore.
 @Service(value = "fakeStoreProductService")
 public class FakeStoreProductService implements ProductService {
