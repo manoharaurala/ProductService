@@ -1,5 +1,6 @@
 package org.ruby.productservice.configurations;
 
+import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
@@ -10,6 +11,7 @@ import org.springframework.web.client.RestTemplate;
 public class ApplicationConfig {
 
     @Bean
+    @LoadBalanced
     public RestTemplate createRestTemplateBean() {
         return new RestTemplate();
     }
@@ -20,4 +22,5 @@ public class ApplicationConfig {
         redisTemplate.setConnectionFactory(redisConnectionFactory);
         return redisTemplate;
     }
+
 }

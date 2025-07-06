@@ -12,6 +12,7 @@ public class AuthCommonUtil {
     private final RestTemplate restTemplate;
 
     public AuthCommonUtil(RestTemplate restTemplate) {
+
         this.restTemplate = restTemplate;
     }
 
@@ -20,9 +21,10 @@ public class AuthCommonUtil {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.set("Authorization", tokenValue);
         HttpEntity<String> httpEntity = new HttpEntity<>(httpHeaders);
-
+        //Instead of hardcoding url we should get list of ips from eureka server
+        // and then use that to call the auth service
         return restTemplate.exchange(
-                "http://127.0.0.1:8080/auth/validate/",
+                "http://USERAUTHSERVIVE/auth/validate/",
                 HttpMethod.GET,
                 httpEntity,
                 UserDto.class
