@@ -1,0 +1,10 @@
+FROM openjdk:21
+LABEL maintainer="Your Name <Ruby>"
+LABEL description="A Docker image for running a Java application with OpenJDK 21"
+LABEL version="1.0"
+# Set the working directory
+WORKDIR /app
+# Copy the application JAR file into the container
+COPY target/ProductService*.jar productservice.jar
+# java -jar productservice.jar
+ENTRYPOINT ["java", "-jar", "productservice.jar"]
